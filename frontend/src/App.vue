@@ -1,13 +1,9 @@
+
 <template>
-  <StudentUpload />
+  
+  <router-view />
+ 
+
 </template>
 
-<script>
-import StudentUpload from "./components/StudentUpload.vue";
 
-export default {
-  components: {
-    StudentUpload
-  }
-};
-</script>
