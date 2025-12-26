@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+python-docx
+pdfplumber
+nltk
+scikit-learn
+firebase-admin
+python-multipart
