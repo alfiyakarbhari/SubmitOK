@@ -1,13 +1,13 @@
 <template>
-  <StudentUpload />
+  <TeacherRuleBuilder />
 </template>
 
 <script>
-import StudentUpload from "./components/StudentUpload.vue";
+import TeacherRuleBuilder from './components/TeacherRuleBuilder.vue';
 
 export default {
   components: {
-    StudentUpload
+    TeacherRuleBuilder
   }
 };
 </script>
