@@ -1,13 +1,9 @@
+
 <template>
-  <TeacherRuleBuilder />
+  
+  <router-view />
+ 
+
 </template>
 
-<script>
-import TeacherRuleBuilder from './components/TeacherRuleBuilder.vue';
 
-export default {
-  components: {
-    TeacherRuleBuilder
-  }
-};
-</script>
