@@ -1,2 +1,51 @@
-./__pycache__
-./temp_uploads
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+.env
+.venv/
+venv/
+ENV/
+env/
+*.log
+
+# Pytest
+.coverage
+htmlcov/
+.pytest_cache/
+
+# ---- FastAPI / Uvicorn ----
+instance/
+*.db-journal
+
+# ---- VS Code ----
+.vscode/
+*.code-workspace
+
+# ---- OS Files ----
+.DS_Store
+Thumbs.db
+
+# ---- Node / Vue ----
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env.local
+.env.*.local
+
+# ---- Build ----
+*.tar.gz
+*.egg-info/
+
+API_keys.txt
+client_secret.json
+
+*.pkl
+*.pkl_state
