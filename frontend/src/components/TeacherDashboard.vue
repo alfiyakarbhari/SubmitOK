@@ -31,15 +31,15 @@
 <script>
 import TeacherCard from '../components/TeacherCard.vue'
 import AddTeacherModal from '../components/AddTeacherModal.vue'
-
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/firebase";
 export default {
   components: { TeacherCard, AddTeacherModal },
   data() {
     return {
       showModal: false,
       teachers: [
-        { id: 1, name: 'Alice Johnson', email: 'alice@school.com' },
-        { id: 2, name: 'Bob Smith', email: 'bob@school.com' },
+        
       ]
     }
   },
@@ -48,6 +48,8 @@ export default {
     goToTeacherPage(teacher) {
       alert(`Navigate to ${teacher.name}'s page`);
       // Example: this.$router.push(`/teacher/${teacher.id}`)
+      this.$router.push(`/teacher/${teacher.id}`);
+
     },
 
     // Add new teacher
@@ -59,7 +61,14 @@ export default {
         email: `${newTeacher.firstName}.${newTeacher.lastName}`.toLowerCase() + '@school.com'
       });
     }
-  }
+  },
+  async mounted() {
+  const snapshot = await getDocs(collection(db, "teachers"));
+  this.teachers = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }));
+}
 }
 </script>
 

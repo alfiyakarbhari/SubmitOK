@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainWelcome from '../components/MainWelcome.vue'
-
+import TeacherPage from '@/components/TeacherPage.vue'
 const routes = [
   {
     path: '/',
@@ -21,7 +21,8 @@ const routes = [
     path: '/dashboard/teacher',
     name: 'teacher-dashboard',
     component: () => import('../components/TeacherDashboard.vue') // <-- load from components
-  }
+  },
+   { path: "/teacher/:teacherId", component: TeacherPage }
 ]
 
 const router = createRouter({

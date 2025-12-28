@@ -91,7 +91,11 @@
     <input type="number" v-model.number="rules.plagiarism_threshold" />
 
     <br /><br />
-    <button @click="generateRules">Generate Rule JSON</button>
+<button @click="saveRules">Save Assignment</button>
+<button @click="$emit('close')">Cancel</button>
+
+<pre v-if="generatedRules">{{ generatedRules }}</pre>
+
 
     <!-- JSON Output -->
     <pre v-if="generatedRules">{{ generatedRules }}</pre>
@@ -119,18 +123,25 @@ export default {
       generatedRules: null
     };
   },
-  methods: {
-    generateRules() {
-      const ruleSet = {
-        subject: this.subject,
-        experiment: this.experiment,
-        experiment_no: this.experimentNo,
-        ...this.rules
-      };
+ methods: {
+  generateRules() {
+    const ruleSet = {
+      subject: this.subject,
+      experiment: this.experiment,
+      experiment_no: this.experimentNo,
+      ...this.rules
+    };
 
-      this.generatedRules = JSON.stringify(ruleSet, null, 2);
-    }
+    this.generatedRules = JSON.stringify(ruleSet, null, 2);
+    return ruleSet;
+  },
+
+  saveRules() {
+    const ruleSet = this.generateRules();
+    this.$emit("save", ruleSet);
   }
+}
+
 };
 </script>
 
