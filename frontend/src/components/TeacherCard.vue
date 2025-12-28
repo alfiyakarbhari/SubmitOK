@@ -1,6 +1,7 @@
 <template>
   <div class="card" @click="$emit('click', teacher)">
     <h3>{{ teacher.name }}</h3>
+     <h4>{{ teacher.department }}</h4>
     <p>{{ teacher.email }}</p>
   </div>
 </template>

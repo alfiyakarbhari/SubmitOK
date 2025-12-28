@@ -3,17 +3,48 @@
     <div class="modal-card">
       <h2>Add New Teacher</h2>
       <form @submit.prevent="createTeacher">
-        <div class="form-group">
-          <label>First Name</label>
-          <input type="text" v-model="firstName" placeholder="First Name" required pattern="[A-Za-z]+" />
-        </div>
-        <div class="form-group">
-          <label>Last Name</label>
-          <input type="text" v-model="lastName" placeholder="Last Name" required pattern="[A-Za-z]+" />
-        </div>
-        <button type="submit">Create Teacher</button>
-        <button type="button" class="cancel-btn" @click="$emit('close')">Cancel</button>
-      </form>
+
+  <div class="form-group">
+    <label>First Name</label>
+    <input
+      type="text"
+      v-model="firstName"
+      placeholder="First Name"
+      required
+      pattern="[A-Za-z]+"
+    />
+  </div>
+
+  <div class="form-group">
+    <label>Last Name</label>
+    <input
+      type="text"
+      v-model="lastName"
+      placeholder="Last Name"
+      required
+      pattern="[A-Za-z]+"
+    />
+  </div>
+
+  <div class="form-group">
+    <label>Department</label>
+    <select v-model="department" required>
+      <option disabled value="">Select Department</option>
+      <option>CSE</option>
+      <option>CE</option>
+      <option>EXTC</option>
+      <option>MCA</option>
+     
+    </select>
+  </div>
+
+  <button type="submit">Create Teacher</button>
+  <button type="button" class="cancel-btn" @click="$emit('close')">
+    Cancel
+  </button>
+
+</form>
+
     </div>
   </div>
 </template>
@@ -25,20 +56,28 @@ export default {
   data() {
     return {
       firstName: '',
-      lastName: ''
+      lastName: '',
+      department:''
     }
   },
   methods: {
-    createTeacher() {
-      if (!this.firstName || !this.lastName) return;
-      this.$emit('create', {
-        name: `${this.firstName} ${this.lastName}`
-      });
-      this.firstName = '';
-      this.lastName = '';
-      this.$emit('close');
-    }
-  }
+  createTeacher() {
+  if (!this.firstName || !this.lastName || !this.department) return;
+
+  this.$emit("create", {
+    firstName: this.firstName,
+    lastName: this.lastName,
+    department: this.department
+  });
+
+  this.firstName = "";
+  this.lastName = "";
+  this.department = "";
+  this.$emit("close");
+}
+
+}
+
 }
 </script>
 

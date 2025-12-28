@@ -33,6 +33,8 @@ import TeacherCard from '../components/TeacherCard.vue'
 import AddTeacherModal from '../components/AddTeacherModal.vue'
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase";
+import { addDoc} from "firebase/firestore";
+
 export default {
   components: { TeacherCard, AddTeacherModal },
   data() {
@@ -53,14 +55,32 @@ export default {
     },
 
     // Add new teacher
-    addTeacher(newTeacher) {
-      const id = this.teachers.length + 1;
-      this.teachers.push({ 
-        id, 
-        name: `${newTeacher.firstName} ${newTeacher.lastName}`,
-        email: `${newTeacher.firstName}.${newTeacher.lastName}`.toLowerCase() + '@school.com'
-      });
-    }
+    async addTeacher(newTeacher) {
+  const fullName = `${newTeacher.firstName} ${newTeacher.lastName}`;
+  const email =
+    `${newTeacher.firstName}.${newTeacher.lastName}`.toLowerCase() +
+    "@school.com";
+    const department=newTeacher.department
+
+  // 1️⃣ Save to Firestore
+  const docRef = await addDoc(collection(db, "teachers"), {
+    name: fullName,
+    email: email,
+    department: department
+  });
+
+  // 2️⃣ Update UI immediately
+  this.teachers.push({
+    id: docRef.id,
+    name: fullName,
+    email: email,
+    department: department
+  });
+
+  // 3️⃣ Close modal
+  this.showModal = false;
+}
+
   },
   async mounted() {
   const snapshot = await getDocs(collection(db, "teachers"));
@@ -108,7 +128,7 @@ export default {
   justify-content: center;
   align-items: center;
   background: var(--accent-color);
-  color: white;
+  color: black;
   cursor: pointer;
   border-radius: 14px;
   padding: 20px;
