@@ -3,6 +3,10 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 
+export function isLoggedIn() {
+  return !!auth.currentUser;
+}
+
 const firebaseConfig = {
   apiKey: "AIzaSyBPSsAdFhMsBneNM05KLnUVlKT-MiqcPNM",
   authDomain: "submitok-cbbd8.firebaseapp.com",

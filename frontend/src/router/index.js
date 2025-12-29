@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
+import { auth } from "@/firebase";
 // Existing imports
 import MainWelcome from '../components/MainWelcome.vue'
 import TeacherPage from '@/components/TeacherPage.vue'
 import VerifyEmail from "@/components/verify-email.vue";
+import UserDashboard from "@/components/UserDashboard.vue";
+import TeacherAssignments from "@/components/TeacherAssignments.vue";
 
 const routes = [
   {
@@ -45,6 +47,11 @@ const routes = [
     component: () => import('../components/TeacherDashboard.vue')
   },
   {
+    path: '/dashboard/user',   // <-- NEW ROUTE
+    name: 'user-dashboard',
+    component: () => import('../components/UserDashboard.vue')
+  },
+  {
     path: '/teacher/:teacherId',
     component: TeacherPage
   },
@@ -52,6 +59,17 @@ const routes = [
     path: "/verify-email",
     name: "VerifyEmail",
     component: VerifyEmail
+  },
+  {
+    path: "/dashboard",
+    name: "UserDashboard",
+    component: UserDashboard
+  },
+  {
+    path: "/teacher-assignments/:teacherId",
+    name: "TeacherAssignments",
+    component: TeacherAssignments,
+    props: true // allows route params as props
   }
 ]
 
@@ -59,5 +77,21 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
+
+// Global guard to protect routes
+// Global guard to protect routes
+router.beforeEach((to, from, next) => {
+  const user = auth.currentUser;
+
+  // 🔒 Only protect USER dashboard (Firebase auth)
+  const protectedRoutes = ['/dashboard', '/dashboard/user'];
+
+  if (protectedRoutes.includes(to.path) && !user) {
+    next('/login'); // redirect to login if not authenticated
+  } else {
+    next(); // allow access
+  }
+});
+
 
 export default router

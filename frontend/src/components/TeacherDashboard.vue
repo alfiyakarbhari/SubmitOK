@@ -1,5 +1,12 @@
 <template>
   <div class="dashboard-wrapper">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <h2 class="logo">SubmitOK</h2>
+      <button class="logout-btn" @click="logout">Logout</button>
+    </nav>
+
+    <!-- Dashboard Content -->
     <h1 class="dashboard-title">Teacher Dashboard</h1>
     <p class="subtitle">Manage and view all teachers</p>
 
@@ -31,68 +38,109 @@
 <script>
 import TeacherCard from '../components/TeacherCard.vue'
 import AddTeacherModal from '../components/AddTeacherModal.vue'
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/firebase";
-import { addDoc} from "firebase/firestore";
+import { collection, getDocs, addDoc } from "firebase/firestore";
+import { db, auth } from "@/firebase";
+import { signOut } from "firebase/auth";
 
 export default {
   components: { TeacherCard, AddTeacherModal },
   data() {
     return {
       showModal: false,
-      teachers: [
-        
-      ]
+      teachers: []
     }
   },
   methods: {
-    // Navigate to teacher page (can integrate router later)
+    // Navigate to teacher page
     goToTeacherPage(teacher) {
       alert(`Navigate to ${teacher.name}'s page`);
-      // Example: this.$router.push(`/teacher/${teacher.id}`)
       this.$router.push(`/teacher/${teacher.id}`);
-
     },
 
     // Add new teacher
     async addTeacher(newTeacher) {
-  const fullName = `${newTeacher.firstName} ${newTeacher.lastName}`;
-  const email =
-    `${newTeacher.firstName}.${newTeacher.lastName}`.toLowerCase() +
-    "@school.com";
-    const department=newTeacher.department
+      const fullName = `${newTeacher.firstName} ${newTeacher.lastName}`;
+      const email =
+        `${newTeacher.firstName}.${newTeacher.lastName}`.toLowerCase() +
+        "@school.com";
+      const department = newTeacher.department;
 
-  // 1️⃣ Save to Firestore
-  const docRef = await addDoc(collection(db, "teachers"), {
-    name: fullName,
-    email: email,
-    department: department
-  });
+      // Save to Firestore
+      const docRef = await addDoc(collection(db, "teachers"), {
+        name: fullName,
+        email: email,
+        department: department
+      });
 
-  // 2️⃣ Update UI immediately
-  this.teachers.push({
-    id: docRef.id,
-    name: fullName,
-    email: email,
-    department: department
-  });
+      // Update UI
+      this.teachers.push({
+        id: docRef.id,
+        name: fullName,
+        email: email,
+        department: department
+      });
 
-  // 3️⃣ Close modal
-  this.showModal = false;
-}
+      // Close modal
+      this.showModal = false;
+    },
 
+    // Logout
+    async logout() {
+      try {
+        await signOut(auth);
+        this.$router.push("/login/teacher"); // Redirect to teacher login
+      } catch (error) {
+        console.error("Logout error:", error);
+      }
+    }
   },
   async mounted() {
-  const snapshot = await getDocs(collection(db, "teachers"));
-  this.teachers = snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  }));
-}
-}
+    // Fetch teachers from Firestore
+    const snapshot = await getDocs(collection(db, "teachers"));
+    this.teachers = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  }
+};
 </script>
 
 <style scoped>
+/* Navbar with pastel color */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 30px;
+  background-color: #B2DFDB; /* pastel teal */
+  border-bottom: 1px solid #ddd;
+  border-radius: 0 0 14px 14px;
+  margin-bottom: 20px;
+}
+
+.logo {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.logout-btn {
+  padding: 8px 16px;
+  background-color: #FFC107;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.logout-btn:hover {
+  background-color: #e0a800;
+}
+
 /* Dashboard Wrapper */
 .dashboard-wrapper {
   padding: 30px;

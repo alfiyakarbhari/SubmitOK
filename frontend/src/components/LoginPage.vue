@@ -31,37 +31,38 @@ export default {
   },
   methods: {
     async login() {
-      if (!this.email || !this.password) {
-        alert("Email and password required");
-        return;
-      }
+  if (!this.email || !this.password) {
+    alert("Email and password required");
+    return;
+  }
 
-      try {
-        // Sign in with Firebase Auth
-        const userCred = await signInWithEmailAndPassword(auth, this.email, this.password);
-        const user = userCred.user;
+  try {
+    // Sign in with Firebase Auth
+    const userCred = await signInWithEmailAndPassword(auth, this.email, this.password);
+    const user = userCred.user;
 
-        // Check if email is verified
-        if (!user.emailVerified) {
-          alert("Please verify your email before logging in.");
-          return;
-        }
-
-        // OPTIONAL: Update Firestore verified field if not already true
-        const userDocRef = doc(db, "users", user.uid);
-        const userSnapshot = await getDoc(userDocRef);
-
-        if (userSnapshot.exists() && !userSnapshot.data().verified) {
-          await updateDoc(userDocRef, { verified: true });
-        }
-
-        // Redirect to dashboard
-        this.$router.push("/dashboard");
-
-      } catch (error) {
-        alert("Invalid email or password");
-      }
+    // Check if email is verified
+    if (!user.emailVerified) {
+      alert("Please verify your email before logging in.");
+      return;
     }
+
+    // OPTIONAL: Update Firestore verified field if not already true
+    const userDocRef = doc(db, "users", user.uid);
+    const userSnapshot = await getDoc(userDocRef);
+
+    if (userSnapshot.exists() && !userSnapshot.data().verified) {
+      await updateDoc(userDocRef, { verified: true });
+    }
+
+    // Redirect to User Dashboard
+    this.$router.push("/dashboard/user");
+
+  } catch (error) {
+    alert("Invalid email or password");
+  }
+}
+
   }
 };
 </script>
