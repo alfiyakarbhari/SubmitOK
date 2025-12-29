@@ -89,7 +89,7 @@ router.beforeEach((to, from, next) => {
   if (protectedRoutes.includes(to.path) && !user) {
     next('/login'); // redirect to login if not authenticated
   } else {
-    next(); // allow access
+    next();
   }
 });
 
