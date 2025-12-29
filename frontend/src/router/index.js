@@ -1,12 +1,34 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
+// Existing imports
 import MainWelcome from '../components/MainWelcome.vue'
 import TeacherPage from '@/components/TeacherPage.vue'
+import VerifyEmail from "@/components/verify-email.vue";
+
 const routes = [
   {
     path: '/',
     name: 'welcome',
     component: MainWelcome
   },
+
+  // -----------------------------
+  // USER AUTH (NEW – FIXED)
+  // -----------------------------
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/components/LoginPage.vue')
+  },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: () => import('@/components/SignupPage.vue')
+  },
+
+  // -----------------------------
+  // EXISTING ROUTES (UNCHANGED)
+  // -----------------------------
   {
     path: '/login/user',
     name: 'user-login',
@@ -20,9 +42,17 @@ const routes = [
   {
     path: '/dashboard/teacher',
     name: 'teacher-dashboard',
-    component: () => import('../components/TeacherDashboard.vue') // <-- load from components
+    component: () => import('../components/TeacherDashboard.vue')
   },
-   { path: "/teacher/:teacherId", component: TeacherPage }
+  {
+    path: '/teacher/:teacherId',
+    component: TeacherPage
+  },
+  {
+    path: "/verify-email",
+    name: "VerifyEmail",
+    component: VerifyEmail
+  }
 ]
 
 const router = createRouter({

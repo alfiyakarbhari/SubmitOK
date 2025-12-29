@@ -21,13 +21,13 @@
 export default {
   name: "MainWelcome",
   methods: {
-    goToUserLogin() {
-      this.$router.push("/login/user");
-    },
-    goToTeacherLogin() {
-      this.$router.push("/login/teacher");
-    }
+  goToUserLogin() {
+    this.$router.push("/login");
+  },
+  goToTeacherLogin() {
+    this.$router.push("/login/teacher");
   }
+}
 };
 </script>
 
