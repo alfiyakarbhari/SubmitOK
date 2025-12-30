@@ -21,14 +21,39 @@
       <!-- File input -->
       <div class="form-group">
         <label class="label">Select File</label>
-        <input type="file" class="file-input" />
+        <input
+  type="file"
+  class="file-input"
+  @change="e => selectedFile = e.target.files[0]"
+/>
+
       </div>
 
       <!-- Buttons -->
       <div class="button-group">
-        <button class="check-btn">Check</button>
-        <button class="submit-btn">Submit</button>
+        <button class="check-btn" @click="checkSubmission">Check</button>
+<button
+  class="submit-btn"
+  :disabled="!canSubmit || submitted"
+  @click="submitAssignment"
+>
+  Submit
+</button>
+
+
+
       </div>
+      <div v-if="validationReport">
+  <h3>Validation Report</h3>
+  <p>Acceptance Score: {{ validationReport.acceptance_score }}%</p>
+
+  <ul>
+    <li v-for="(v, k) in validationReport.results" :key="k">
+      {{ k }} → {{ v }}
+    </li>
+  </ul>
+</div>
+
     </div>
   </div>
 </template>
@@ -36,14 +61,76 @@
 <script>
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/firebase";
+import axios from "axios";
+import { auth } from "@/firebase";
 
 export default {
   name: "AssignmentUpload",
   data() {
-    return {
-      assignment: null
-    };
+  return {
+    assignment: null,
+    selectedFile: null,
+    validationReport: null,
+    canSubmit: false,
+    submitted: false
+
+  };
+}
+,
+methods: {
+  async checkSubmission() {
+    if (!this.selectedFile) return;
+
+    const formData = new FormData();
+    formData.append("file", this.selectedFile);
+    formData.append("assignment_id", this.$route.params.id);
+
+    const res = await axios.post(
+      "http://127.0.0.1:8000/check-submission",
+      formData
+    );
+
+    this.validationReport = res.data.validation_report;
+    this.canSubmit = this.validationReport.accepted === true;
   },
+  async submitAssignment() {
+  if (!this.selectedFile || !this.canSubmit) return;
+
+  const user = auth.currentUser;
+
+  if (!user) {
+    alert("User not logged in");
+    return;
+  }
+
+  const studentId = user.uid; // 🔥 THIS is the Firestore document ID
+
+  try {
+    const formData = new FormData();
+    formData.append("file", this.selectedFile);
+    formData.append("assignment_id", this.$route.params.id);
+    formData.append("student_id", studentId);
+
+    const res = await axios.post(
+      "http://127.0.0.1:8000/submit-submission",
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    alert("Assignment submitted successfully!");
+    this.submitted = true;
+
+this.$router.push("/student/submissions");
+
+    console.log(res.data);
+
+  } catch (err) {
+    console.error(err);
+    alert("Submission failed");
+  }
+}
+
+},
   async mounted() {
     try {
       const assignmentId = this.$route.params.id;

@@ -29,6 +29,15 @@ const routes = [
     name: 'signup',
     component: () => import('@/components/SignupPage.vue')
   },
+{
+  path: "/student/submissions",
+  component: () => import("@/components/StudentSubmissions.vue")
+}
+,
+{
+  path: "/teacher/assignment/:assignmentId/submissions",
+  component: () => import("@/components/ViewSubmissions.vue")
+},
 
   // -----------------------------
   // EXISTING ROUTES (UNCHANGED)

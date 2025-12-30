@@ -88,7 +88,7 @@ export default {
     async logout() {
       try {
         await signOut(auth);
-        this.$router.push("/login/teacher"); // Redirect to teacher login
+        this.$router.push("/"); // Redirect to teacher login
       } catch (error) {
         console.error("Logout error:", error);
       }

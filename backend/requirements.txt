@@ -6,3 +6,4 @@ nltk
 scikit-learn
 firebase-admin
 python-multipart
+cloudinary

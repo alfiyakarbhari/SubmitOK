@@ -3,11 +3,13 @@
     <!-- Navbar -->
     <nav class="navbar">
       <h2 class="logo">SubmitOK</h2>
+      
       <button class="logout-btn" @click="logout">Logout</button>
     </nav>
 
     <!-- Dashboard Content -->
     <h1 class="dashboard-title">Welcome to SubmitOK</h1>
+    <button class="logout-btn" @click="viewSubmissions">View Your Submissions</button>
     <p class="subtitle">Here are the teachers:</p>
 
     <div class="grid">
@@ -27,6 +29,7 @@ import UserTeacherCard from '../components/UserTeacherCard.vue';
 import { collection, getDocs } from "firebase/firestore";
 import { db, auth } from "@/firebase";
 import { signOut } from "firebase/auth";
+
 
 export default {
   name: "UserDashboard",
@@ -50,10 +53,13 @@ export default {
     async logout() {
       try {
         await signOut(auth);
-        this.$router.push("/login");
+        this.$router.push("/");
       } catch (error) {
         console.error("Logout error:", error);
       }
+    },
+    viewSubmissions(){
+      this.$router.push("/student/submissions")
     }
   }
 };

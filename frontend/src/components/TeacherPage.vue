@@ -9,6 +9,10 @@
     </div>
 
    <div v-for="a in assignments" :key="a.id" class="assignment-card">
+   <button @click="viewSubmissions(a.id)">
+  View Submissions
+</button>
+
   <h3>
     {{ a.subject }} – Exp {{ a.experiment_no }}
   </h3>
@@ -49,6 +53,7 @@ import TeacherRuleBuilder from "@/components/TeacherRuleBuilder.vue";
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/firebase";
 
+
 export default {
   name: "TeacherDashboard",
   components: { TeacherRuleBuilder },
@@ -77,7 +82,10 @@ export default {
   this.showBuilder = false;
   this.fetchAssignments(); // refresh list
 },
-
+viewSubmissions(assignmentId) {
+  this.$router.push(`/teacher/assignment/${assignmentId}/submissions`);
+}
+,
 async fetchAssignments() {
     const q = query(
       collection(db, "assignments"),
