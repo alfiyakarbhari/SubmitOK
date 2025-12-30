@@ -6,6 +6,8 @@ import TeacherPage from '@/components/TeacherPage.vue'
 import VerifyEmail from "@/components/verify-email.vue";
 import UserDashboard from "@/components/UserDashboard.vue";
 import TeacherAssignments from "@/components/TeacherAssignments.vue";
+import AssignmentUpload from "@/components/AssignmentUpload.vue";
+
 
 const routes = [
   {
@@ -70,7 +72,12 @@ const routes = [
     name: "TeacherAssignments",
     component: TeacherAssignments,
     props: true // allows route params as props
-  }
+  },
+  {
+  path: "/assignment/:id",
+  name: "AssignmentUpload",
+  component: AssignmentUpload
+}
 ]
 
 const router = createRouter({
