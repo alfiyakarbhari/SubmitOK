@@ -79,7 +79,11 @@ async def check_submission(
     student_json = generate_student_document_json(sections, full_text, has_image)
 
     # 4️⃣ Validate
-    validation_report = validate_rules(student_json, rule_json)
+    validation_report = validate_rules(
+    student_json,
+    rule_json,
+    assignment_id
+)
 
     return {
         "student_document": student_json,
@@ -140,7 +144,7 @@ async def submit_submission(
     # Parse + validate again (safety)
     sections, full_text, has_image = parse_document(file_path)
     student_json = generate_student_document_json(sections, full_text, has_image)
-    validation = validate_rules(student_json, rules)
+    validation = validate_rules(student_json, rules,assignment_id)
 
     if not validation["accepted"]:
         return {"error": "Submission not accepted"}

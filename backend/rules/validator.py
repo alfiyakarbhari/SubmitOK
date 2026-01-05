@@ -1,4 +1,7 @@
-def validate_rules(student_json, rule_json):
+from utils.firestore_helpers import get_existing_texts
+from utils.plagiarism import calculate_plagiarism
+
+def validate_rules(student_json, rule_json,assignment_id):
     results = {}
     passed = 0
     total = 0
@@ -58,12 +61,29 @@ def validate_rules(student_json, rule_json):
     else:
         results["conclusion"] = f"FAIL (word count: {wc})"
 
-    acceptance_score = (passed / total) * 100
+    # -------- PLAGIARISM CHECK --------
+    total += 1
+    threshold = rule_json.get("plagiarism_threshold", 100)
+
+    existing_texts = get_existing_texts(assignment_id)
+    plagiarism_score = calculate_plagiarism(
+        student_json["full_text"],
+        existing_texts
+    )
+
+    if plagiarism_score <= threshold:
+        results["plagiarism"] = f"PASS ({plagiarism_score}%)"
+        passed += 1
+    else:
+        results["plagiarism"] = f"FAIL ({plagiarism_score}%)"
+
+    acceptance_score = round((passed / total) * 100, 2)
 
     return {
         "results": results,
         "passed": passed,
         "total": total,
         "acceptance_score": acceptance_score,
+        "plagiarism_score": plagiarism_score,
         "accepted": acceptance_score == 100
     }

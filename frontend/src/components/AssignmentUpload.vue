@@ -126,7 +126,7 @@ this.$router.push("/student/submissions");
 
   } catch (err) {
     console.error(err);
-    alert("Submission failed");
+    alert(err.error);
   }
 }
 
