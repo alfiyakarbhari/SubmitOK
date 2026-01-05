@@ -46,6 +46,6 @@ yarn-error.log*
 
 API_keys.txt
 client_secret.json
-
+temp_uploads/
 *.pkl
 *.pkl_state
