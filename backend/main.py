@@ -5,6 +5,8 @@ import os
 from rules.validator import validate_rules
 from parser.document_parser import parse_document, generate_student_document_json
 from firebase_config import db   # ✅ ADDED
+from utils.llm_feedback import generate_ai_suggestions
+
 import cloudinary_config  # ✅ IMPORTANT: this loads API keys
 
 app = FastAPI()
@@ -85,10 +87,20 @@ async def check_submission(
     assignment_id
 )
 
+    ai_suggestions = None
+    if not validation_report["accepted"]:
+        ai_suggestions = generate_ai_suggestions(
+            rule_json,
+            validation_report,
+            student_json
+        )
+    
     return {
         "student_document": student_json,
-        "validation_report": validation_report
+        "validation_report": validation_report,
+        "ai_suggestions": ai_suggestions
     }
+
 import cloudinary.uploader
 
 def upload_file_to_storage(file_path, filename):

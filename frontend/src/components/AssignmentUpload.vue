@@ -53,6 +53,24 @@
     </li>
   </ul>
 </div>
+<div v-if="aiSuggestions && aiSuggestions.length">
+  <h3>✨ How to Improve Your Submission</h3>
+
+  <div
+    v-for="section in aiSuggestions"
+    :key="section.rule"
+    class="suggestion-section"
+  >
+    <h4>{{ section.title }}</h4>
+
+    <ul>
+      <li v-for="(tip, i) in section.tips" :key="i">
+        {{ tip }}
+      </li>
+    </ul>
+  </div>
+</div>
+
 
     </div>
   </div>
@@ -72,27 +90,30 @@ export default {
     selectedFile: null,
     validationReport: null,
     canSubmit: false,
-    submitted: false
+    submitted: false,
+    aiSuggestions: [],
 
   };
 }
 ,
 methods: {
   async checkSubmission() {
-    if (!this.selectedFile) return;
+  if (!this.selectedFile) return;
 
-    const formData = new FormData();
-    formData.append("file", this.selectedFile);
-    formData.append("assignment_id", this.$route.params.id);
+  const formData = new FormData();
+  formData.append("file", this.selectedFile);
+  formData.append("assignment_id", this.$route.params.id);
 
-    const res = await axios.post(
-      "http://127.0.0.1:8000/check-submission",
-      formData
-    );
+  const res = await axios.post(
+    "http://127.0.0.1:8000/check-submission",
+    formData
+  );
 
-    this.validationReport = res.data.validation_report;
-    this.canSubmit = this.validationReport.accepted === true;
-  },
+  this.validationReport = res.data.validation_report;
+  this.aiSuggestions = res.data.ai_suggestions || [];  // ✅ ADD THIS
+  this.canSubmit = this.validationReport.accepted === true;
+}
+,
   async submitAssignment() {
   if (!this.selectedFile || !this.canSubmit) return;
 
@@ -258,4 +279,23 @@ this.$router.push("/student/submissions");
 .submit-btn {
   background-color: #FFC107;
 }
+.suggestion-section {
+  margin-top: 16px;
+}
+
+.suggestion-section h4 {
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 600;
+}
+
+.suggestion-section ul {
+  padding-left: 18px;
+}
+
+.suggestion-section li {
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
 </style>
